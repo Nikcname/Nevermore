@@ -29,6 +29,7 @@ public class ListFragment extends Fragment {
     private RecyclerView.LayoutManager manager;
     private List<MangaInstance> logoManga = new ArrayList<>();
     private List<MangaInstance> mangaInstancesMain = new ArrayList<>();
+    private PassmangaSelected passmangaSelected;
 
     public ListFragment() {
     }
@@ -56,6 +57,14 @@ public class ListFragment extends Fragment {
             }
 
         });
+
+        ((MangaAdapter)adapter).setOnClickMangaListener(new MangaAdapter.OnClickedManga() {
+            @Override
+            public void mangaClicked(MangaInstance mangaClicked) {
+                passmangaSelected.passSelected(mangaClicked);
+            }
+        });
+
         pageDownloader.execute(siteUrl);
 
         return v;
@@ -81,7 +90,14 @@ public class ListFragment extends Fragment {
         temp.setBitmap(bitmap);
         logoManga.add(temp);
         adapter.notifyDataSetChanged();
+    }
 
+    public interface PassmangaSelected{
+        void passSelected(MangaInstance manga);
+    }
+
+    public void setOnPassListener(PassmangaSelected passmangaSelected){
+        this.passmangaSelected = passmangaSelected;
     }
 
 }

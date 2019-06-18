@@ -139,8 +139,8 @@ public class PageDownloader extends AsyncTask<String, Void, Document> {
 //            for (int i = 0; i < count; i++) {
 //                mangaInstances.add(new MangaInstance(names.get(i), descs.get(i), urls.get(i), chpts.get(i)));
 //            }
-            for (MangaInstance s : mangaInstances)
-                System.out.println(s);
+//            for (MangaInstance s : mangaInstances)
+//                System.out.println(s);
             resultList.passMangaInstance(mangaInstances);
         }
     }

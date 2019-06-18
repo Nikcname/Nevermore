@@ -16,6 +16,7 @@ import java.util.List;
 public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MangaViewHolder> {
 
     private List<MangaInstance> logoManga;
+    private OnClickedManga onClickedManga;
 
     public MangaAdapter(List<MangaInstance> logoManga){
         this.logoManga = logoManga;
@@ -43,7 +44,7 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MangaViewHol
 
         @Override
         public void onClick(View view) {
-
+            onClickedManga.mangaClicked(logoManga.get(getAdapterPosition()));
         }
     }
 
@@ -72,5 +73,13 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MangaViewHol
     @Override
     public int getItemCount() {
         return logoManga.size();
+    }
+
+    public interface OnClickedManga{
+        void mangaClicked(MangaInstance mangaClicked);
+    }
+
+    public void setOnClickMangaListener(OnClickedManga onClickedManga){
+        this.onClickedManga = onClickedManga;
     }
 }
