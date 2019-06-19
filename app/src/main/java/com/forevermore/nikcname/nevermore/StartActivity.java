@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
+import com.forevermore.nikcname.nevermore.downloaders.IntPageDownloader;
 import com.forevermore.nikcname.nevermore.fragments.ListFragment;
+
+import java.util.List;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -20,7 +23,16 @@ public class StartActivity extends AppCompatActivity {
         ((ListFragment)listFragment).setOnPassListener(new ListFragment.PassmangaSelected() {
             @Override
             public void passSelected(MangaInstance manga) {
-                System.out.println(manga);
+                IntPageDownloader pageDownloader = new IntPageDownloader();
+                ((IntPageDownloader)pageDownloader).setOnDescDownloadedListener(new IntPageDownloader.PassListAndDesc() {
+                    @Override
+                    public void passLists(String descrAll, List<String> chapterDescs, List<String> chapterUris) {
+                        manga.setChapterDescs(chapterDescs);
+                        manga.setChapterUris(chapterUris);
+                        manga.setFullDesc(descrAll);
+                    }
+                });
+                pageDownloader.execute("https://manga-chan.me" + manga.getUrlOfManga());
             }
         });
 

@@ -2,6 +2,9 @@ package com.forevermore.nikcname.nevermore.containers;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MangaInstance {
 
     private String name;
@@ -10,6 +13,34 @@ public class MangaInstance {
     private String chapters;
     private Bitmap bitmap;
     private String urlOfManga;
+    private String fullDesc;
+
+    public String getFullDesc() {
+        return fullDesc;
+    }
+
+    public void setFullDesc(String fullDesc) {
+        this.fullDesc = fullDesc;
+    }
+
+    private List<String> chapterDescs = new ArrayList<>();
+    private List<String> chapterUris = new ArrayList<>();
+
+    public List<String> getChapterDescs() {
+        return chapterDescs;
+    }
+
+    public void setChapterDescs(List<String> chapterDescs) {
+        this.chapterDescs = chapterDescs;
+    }
+
+    public List<String> getChapterUris() {
+        return chapterUris;
+    }
+
+    public void setChapterUris(List<String> chapterUris) {
+        this.chapterUris = chapterUris;
+    }
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
