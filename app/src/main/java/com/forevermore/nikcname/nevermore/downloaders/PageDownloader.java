@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +46,6 @@ public class PageDownloader extends AsyncTask<String, Void, Document> {
             Elements titles = document.select(cssPathName);
             Elements headings = document.select(cssPathDesc);
             Elements chapters = document.select(cssChapters);
-
-            int count = headings.size();
 
             for (int i = 0; i < images.size(); i += 2) {
                 m = p.matcher(images.get(i).toString());
@@ -154,58 +153,58 @@ public class PageDownloader extends AsyncTask<String, Void, Document> {
 
         for (int i = 0; i < count; i++) {
 
-            String urlOfManga = patrseUrl(titles.get(i).toString());
-            String resultTitle = parseCharacters(titles.get(i).toString());
-            String resultHeading = parseCharacters(headings.get(i).toString());
-            String resultChapter = parseCharacters(chapters.get(i).toString());
+            String urlOfManga = titles.get(i).attr("href");
+            String resultTitle = titles.get(i).text();
+            String resultHeading = headings.get(i).text();
+            String resultChapter = chapters.get(i).text();
 
             mangaInstances.add(new MangaInstance(resultTitle, resultHeading, urls.get(i), resultChapter, urlOfManga));
         }
 
         return mangaInstances;
     }
-
-    private String parseCharacters(String beforeParse){
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        boolean flagStart = false;
-        for (int j = 0; j < beforeParse.length(); j++) {
-
-            char processing = beforeParse.charAt(j);
-
-            if (processing == '<') {
-                flagStart = false;
-            }
-
-            if (flagStart) {
-                stringBuilder.append(beforeParse.charAt(j));
-            }
-
-            if (processing == '>') {
-                flagStart = true;
-            }
-        }
-
-        return stringBuilder.toString();
-    }
-
-    private String patrseUrl(String string){
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (int i = 0; i < string.length(); i++){
-            char temp = string.charAt(i);
-            if (temp == '/'){
-                while (temp != '"'){
-                    stringBuilder.append(temp);
-                    temp = string.charAt(++i);
-                }
-                break;
-            }
-        }
-        return stringBuilder.toString();
-    }
+//
+//    private String parseCharacters(String beforeParse){
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//
+//        boolean flagStart = false;
+//        for (int j = 0; j < beforeParse.length(); j++) {
+//
+//            char processing = beforeParse.charAt(j);
+//
+//            if (processing == '<') {
+//                flagStart = false;
+//            }
+//
+//            if (flagStart) {
+//                stringBuilder.append(beforeParse.charAt(j));
+//            }
+//
+//            if (processing == '>') {
+//                flagStart = true;
+//            }
+//        }
+//
+//        return stringBuilder.toString();
+//    }
+//
+//    private String patrseUrl(String string){
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//
+//        for (int i = 0; i < string.length(); i++){
+//            char temp = string.charAt(i);
+//            if (temp == '/'){
+//                while (temp != '"'){
+//                    stringBuilder.append(temp);
+//                    temp = string.charAt(++i);
+//                }
+//                break;
+//            }
+//        }
+//        return stringBuilder.toString();
+//    }
 
     public interface ResultList{
         void passMangaInstance(List<MangaInstance> urls);
