@@ -14,37 +14,8 @@ public class MangaInstance {
     private Bitmap bitmap;
     private String urlOfManga;
     private String fullDesc;
-
-    public String getFullDesc() {
-        return fullDesc;
-    }
-
-    public void setFullDesc(String fullDesc) {
-        this.fullDesc = fullDesc;
-    }
-
     private List<String> chapterDescs = new ArrayList<>();
     private List<String> chapterUris = new ArrayList<>();
-
-    public List<String> getChapterDescs() {
-        return chapterDescs;
-    }
-
-    public void setChapterDescs(List<String> chapterDescs) {
-        this.chapterDescs = chapterDescs;
-    }
-
-    public List<String> getChapterUris() {
-        return chapterUris;
-    }
-
-    public void setChapterUris(List<String> chapterUris) {
-        this.chapterUris = chapterUris;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
 
     public MangaInstance(String name, String description, String imageUrl, String chapters, String urlOfManga) {
         this.name = name;
@@ -63,6 +34,9 @@ public class MangaInstance {
                 ", chapters='" + chapters + '\'' +
                 ", bitmap=" + bitmap +
                 ", urlOfManga='" + urlOfManga + '\'' +
+                ", fullDesc='" + fullDesc + '\'' +
+                ", chapterDescs=" + chapterDescs +
+                ", chapterUris=" + chapterUris +
                 '}';
     }
 
@@ -88,5 +62,33 @@ public class MangaInstance {
 
     public String getChapters() {
         return chapters;
+    }
+
+    public String getFullDesc() {
+        return fullDesc;
+    }
+
+    public void setFullDesc(String fullDesc) {
+        this.fullDesc = fullDesc.substring(0, fullDesc.length() - 17);
+    }
+
+    public List<String> getChapterDescs() {
+        return chapterDescs;
+    }
+
+    public void setChapterDescs(List<String> chapterDescs) {
+        this.chapterDescs = chapterDescs;
+    }
+
+    public List<String> getChapterUris() {
+        return chapterUris;
+    }
+
+    public void setChapterUris(List<String> chapterUris) {
+        this.chapterUris = chapterUris;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

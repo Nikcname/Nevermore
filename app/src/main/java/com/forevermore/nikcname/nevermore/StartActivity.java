@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import com.forevermore.nikcname.nevermore.downloaders.IntPageDownloader;
+import com.forevermore.nikcname.nevermore.fragments.EntryFragment;
 import com.forevermore.nikcname.nevermore.fragments.ListFragment;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         ListFragment listFragment = new ListFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
         ((ListFragment)listFragment).setOnPassListener(new ListFragment.PassmangaSelected() {
             @Override
             public void passSelected(MangaInstance manga) {
@@ -30,27 +33,23 @@ public class StartActivity extends AppCompatActivity {
                         manga.setChapterDescs(chapterDescs);
                         manga.setChapterUris(chapterUris);
                         manga.setFullDesc(descrAll);
+
+                        EntryFragment entryFragment = EntryFragment.newInstance(manga);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+                        fragmentTransaction.replace(R.id.frame_layout_main, entryFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
                     }
                 });
                 pageDownloader.execute("https://manga-chan.me" + manga.getUrlOfManga());
             }
         });
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.frame_layout_main, listFragment);
         fragmentTransaction.commit();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }
