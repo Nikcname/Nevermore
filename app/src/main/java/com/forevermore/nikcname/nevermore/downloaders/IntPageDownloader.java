@@ -14,7 +14,8 @@ import java.util.List;
 public class IntPageDownloader extends AsyncTask<String, Void, Document>{
 
     private String cssPathDescription = "html body#wrap div.main_fon div#content div#dle-content div#description";
-    private String cssPathList = "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.no_zaliv td div.manga2 a";
+    private String cssPathListOdd = "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.no_zaliv td div.manga2 a";
+    private String cssPathListEven = "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.zaliv td div.manga2 a";
     private PassListAndDesc passListAndDesc;
 
     @Override
@@ -66,12 +67,27 @@ public class IntPageDownloader extends AsyncTask<String, Void, Document>{
 ////                }
 //                descriptionStr = desc.text();
 //            }
-            Elements chapters = document.select(cssPathList);
-            for (Element element : chapters){
-                chaptersList.add(element.text());
-                chapterListUrl.add(element.attributes().get("href"));
-            }
 
+            Elements chaptersOdd = document.select(cssPathListOdd);
+            Elements chaptersEven = document.select(cssPathListEven);
+
+            for (int i = 0; i < chaptersOdd.size(); i++){
+                try {
+
+                    chaptersList.add(chaptersOdd.get(i).text());
+                    chaptersList.add(chaptersEven.get(i).text());
+                    chapterListUrl.add(chaptersOdd.get(i).attributes().get("href"));
+                    chapterListUrl.add(chaptersEven.get(i).attributes().get("href"));
+                } catch (IndexOutOfBoundsException e){
+//                    e.printStackTrace();
+                }
+            }
+//
+//            Elements chapters = document.select(cssPathListOdd);
+//            for (Element element : chapters){
+//                chaptersList.add(element.text());
+//                chapterListUrl.add(element.attributes().get("href"));
+//            }
             passListAndDesc.passLists(description.get(0).text(), chaptersList, chapterListUrl);
         }
     }

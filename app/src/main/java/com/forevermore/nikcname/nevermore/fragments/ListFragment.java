@@ -24,7 +24,8 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
 
-    private String siteUrl = "https://manga-chan.me/manga/new";
+//    private String siteUrl = "https://manga-chan.me/manga/new";
+    private String siteUrl = "https://manga-chan.me/manga/new?offset=15480";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager manager;
