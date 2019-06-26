@@ -1,15 +1,15 @@
 package com.forevermore.nikcname.nevermore.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,13 +20,13 @@ import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 public class EntryFragment extends Fragment {
 
     private static MangaInstance mangaInstance;
-    private RecyclerView recyclerViewChapters;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager manager;
+    private RecyclerView recyclerViewForChapters;
+    private RecyclerView.Adapter adapterForChapters;
+    private RecyclerView.LayoutManager managerForChapters;
+    private Button startReading;
+    private InterfacePassSelectedLink interfacePassSelectedLink;
 
-    public EntryFragment() {
-
-    }
+    public EntryFragment() {}
 
     public static EntryFragment newInstance(MangaInstance manga) {
         EntryFragment fragment = new EntryFragment();
@@ -44,20 +44,42 @@ public class EntryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_entry, container, false);
 
-        recyclerViewChapters = v.findViewById(R.id.rec_view_chapters);
-        manager = new LinearLayoutManager(getContext());
-        recyclerViewChapters.setLayoutManager(manager);
-        adapter = new ChapterAdapter(mangaInstance.getChapterDescs());
-        recyclerViewChapters.setAdapter(adapter);
+        recyclerViewForChapters = v.findViewById(R.id.recycler_for_mangas_entry);
+        managerForChapters = new LinearLayoutManager(getContext());
+        recyclerViewForChapters.setLayoutManager(managerForChapters);
+        adapterForChapters = new ChapterAdapter(mangaInstance.getChapterDescs());
+        recyclerViewForChapters.setAdapter(adapterForChapters);
+        startReading = v.findViewById(R.id.button_start_reading_entry);
 
-        TextView textViewDescAll = v.findViewById(R.id.text_view_add_desc);
-        textViewDescAll.setMovementMethod(new ScrollingMovementMethod());
-        textViewDescAll.setText(mangaInstance.getFullDesc());
-
-        ImageView imageViewPicture = v.findViewById(R.id.image_view_picture);
-
+        TextView textViewFullDesc = v.findViewById(R.id.text_view_manga_desc_entry);
+        ImageView imageViewPicture = v.findViewById(R.id.image_view_picture_entry);
+        textViewFullDesc.setMovementMethod(new ScrollingMovementMethod());
+        textViewFullDesc.setText(mangaInstance.getFullDesc());
         imageViewPicture.setImageBitmap(mangaInstance.getBitmap());
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        startReading.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String linkOfMangaForRead = "https://manga-chan.me" + mangaInstance.getChapterOne();
+                interfacePassSelectedLink.passLink(linkOfMangaForRead);
+
+            }
+        });
+    }
+
+    public interface InterfacePassSelectedLink{
+        void passLink(String link);
+    }
+
+    public void setOnCallbackListener(InterfacePassSelectedLink interfacePassSelectedLink){
+        this.interfacePassSelectedLink = interfacePassSelectedLink;
     }
 }

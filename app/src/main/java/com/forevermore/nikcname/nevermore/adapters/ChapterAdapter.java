@@ -46,7 +46,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChViewHo
         public ChViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewChapter = itemView.findViewById(R.id.text_view_chapter);
+            textViewChapter = itemView.findViewById(R.id.text_view_chapter_entry);
 
             itemView.setOnClickListener(this);
 

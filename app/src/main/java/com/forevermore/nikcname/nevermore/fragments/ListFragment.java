@@ -1,8 +1,6 @@
 package com.forevermore.nikcname.nevermore.fragments;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,38 +23,33 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
 //    private String siteUrl = "https://manga-chan.me/manga/new";
-    private String siteUrl = "https://manga-chan.me/manga/new?offset=15480";
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager manager;
-    private List<MangaInstance> logoManga = new ArrayList<>();
-    private List<MangaInstance> mangaInstancesMain = new ArrayList<>();
+    private String siteMainUriForRecycler = "https://manga-chan.me/manga/new?offset=15480";
+    private RecyclerView recyclerViewForMangaList;
+    private RecyclerView.Adapter adapterForMangaList;
+    private RecyclerView.LayoutManager managerForMangaList;
+    private List<MangaInstance> mangaInstancesOfList = new ArrayList<>();
+    private List<MangaInstance> mangaInstancesTempList = new ArrayList<>();
     private PassmangaSelected passmangaSelected;
 
-    public ListFragment() {
-    }
+    public ListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_list, container, false);
+        View viewFragmentList = inflater.inflate(R.layout.fragment_list, container, false);
 
-        recyclerView = v.findViewById(R.id.recycler_manga_list);
-        recyclerView.setHasFixedSize(true);
-        manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
-        adapter = new MangaAdapter(logoManga);
-        recyclerView.setAdapter(adapter);
+        recyclerViewForMangaList = viewFragmentList.findViewById(R.id.recycler_for_mangas_list);
+        recyclerViewForMangaList.setHasFixedSize(true);
+        managerForMangaList = new LinearLayoutManager(getContext());
+        recyclerViewForMangaList.setLayoutManager(managerForMangaList);
+        adapterForMangaList = new MangaAdapter(mangaInstancesOfList);
+        recyclerViewForMangaList.setAdapter(adapterForMangaList);
 
-        ((MangaAdapter)adapter).setOnClickMangaListener(new MangaAdapter.OnClickedManga() {
-            @Override
-            public void mangaClicked(MangaInstance mangaClicked) {
-                passmangaSelected.passSelected(mangaClicked);
-            }
-        });
+        ((MangaAdapter) adapterForMangaList).setOnClickMangaListener(mangaClicked ->
+                passmangaSelected.passSelected(mangaClicked));
 
-        return v;
+        return viewFragmentList;
     }
 
     @Override
@@ -64,18 +57,11 @@ public class ListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         PageDownloader pageDownloader = new PageDownloader();
-        pageDownloader.setOnResultListener(new PageDownloader.ResultList() {
-            @Override
-            public void passMangaInstance(List<MangaInstance> mangas) {
+        pageDownloader.setOnResultListener(mangas -> {
+            mangaInstancesTempList = mangas;
+            downloadImages(mangas);});
 
-                mangaInstancesMain = mangas;
-                downloadImages(mangas);
-
-            }
-
-        });
-
-        pageDownloader.execute(siteUrl);
+        pageDownloader.execute(siteMainUriForRecycler);
     }
 
     public void downloadImages(List<MangaInstance> mangas){
@@ -88,16 +74,17 @@ public class ListFragment extends Fragment {
                 }
             });
 //            imageDownloader.execute(urls.get(i));
-            imageDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas.get(i).getImageUrl());
+            imageDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas.get(i)
+                    .getImageUrl());
         }
     }
 
     public void notifyAdapterChange(Bitmap bitmap, int i){
 
-        MangaInstance temp = mangaInstancesMain.get(i);
+        MangaInstance temp = mangaInstancesTempList.get(i);
         temp.setBitmap(bitmap);
-        logoManga.add(temp);
-        adapter.notifyDataSetChanged();
+        mangaInstancesOfList.add(temp);
+        adapterForMangaList.notifyDataSetChanged();
     }
 
     public interface PassmangaSelected{

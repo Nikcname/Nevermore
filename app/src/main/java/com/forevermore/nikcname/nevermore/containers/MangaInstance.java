@@ -16,6 +16,15 @@ public class MangaInstance {
     private String fullDesc;
     private List<String> chapterDescs = new ArrayList<>();
     private List<String> chapterUris = new ArrayList<>();
+    private String chapterOne;
+
+    public String getChapterOne() {
+        return chapterOne;
+    }
+
+    public void setChapterOne(String chapterOne) {
+        this.chapterOne = chapterOne;
+    }
 
     public MangaInstance(String name, String description, String imageUrl, String chapters, String urlOfManga) {
         this.name = name;

@@ -7,7 +7,7 @@
     tools:context=".fragments.ListFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_manga_list"
+        android:id="@+id/recycler_for_mangas_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"

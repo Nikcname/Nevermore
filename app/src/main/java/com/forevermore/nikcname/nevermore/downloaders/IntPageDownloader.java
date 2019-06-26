@@ -14,8 +14,9 @@ import java.util.List;
 public class IntPageDownloader extends AsyncTask<String, Void, Document>{
 
     private String cssPathDescription = "html body#wrap div.main_fon div#content div#dle-content div#description";
-    private String cssPathListOdd = "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.no_zaliv td div.manga2 a";
-    private String cssPathListEven = "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.zaliv td div.manga2 a";
+    private String cssPathChapterOne =   "html body#wrap div.main_fon div#content div#dle-content div#right div.extaraNavi p.extra_off a";
+    private String cssPathListOdd =     "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.no_zaliv td div.manga2 a";
+    private String cssPathListEven =    "html body#wrap div.main_fon div#content div#dle-content div table#tc_1.table_cha tbody tr.zaliv td div.manga2 a";
     private PassListAndDesc passListAndDesc;
 
     @Override
@@ -67,6 +68,8 @@ public class IntPageDownloader extends AsyncTask<String, Void, Document>{
 ////                }
 //                descriptionStr = desc.text();
 //            }
+            Elements chapterOneUri = document.select(cssPathChapterOne);
+            String uriOfChapterOne = chapterOneUri.get(chapterOneUri.size() - 1).attr("href");
 
             Elements chaptersOdd = document.select(cssPathListOdd);
             Elements chaptersEven = document.select(cssPathListEven);
@@ -88,12 +91,12 @@ public class IntPageDownloader extends AsyncTask<String, Void, Document>{
 //                chaptersList.add(element.text());
 //                chapterListUrl.add(element.attributes().get("href"));
 //            }
-            passListAndDesc.passLists(description.get(0).text(), chaptersList, chapterListUrl);
+            passListAndDesc.passLists(description.get(0).text(), chaptersList, chapterListUrl, uriOfChapterOne);
         }
     }
 
     public interface PassListAndDesc{
-        void passLists(String descrAll, List<String> chapterDescs, List<String> chapterUris);
+        void passLists(String descrAll, List<String> chapterDescs, List<String> chapterUris, String uriOfChapterOne);
     }
 
     public void setOnDescDownloadedListener(PassListAndDesc passListAndDesc){

@@ -8,10 +8,9 @@
     android:background="@drawable/shadow_background">
 
     <TextView
-        android:id="@+id/text_view_chapter"
+        android:id="@+id/text_view_chapter_entry"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_margin="5dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="14sp"

@@ -8,11 +8,10 @@
     android:background="@drawable/shadow_background">
 
     <ImageView
-        android:id="@+id/image_view_logo"
+        android:id="@+id/image_view_manga_picture_item"
         android:layout_width="150dp"
         android:layout_height="230dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_title"
+        android:id="@+id/text_view_manga_title_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -30,11 +29,11 @@
         android:layout_marginRight="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_logo"
+        app:layout_constraintStart_toEndOf="@+id/image_view_manga_picture_item"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_chapters"
+        android:id="@+id/text_view_chapters_amnt_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -43,19 +42,19 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_logo"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+        app:layout_constraintStart_toEndOf="@+id/image_view_manga_picture_item"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_manga_title_item" />
 
     <TextView
-        android:id="@+id/text_view_desc"
+        android:id="@+id/text_view_manga_desc_item"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_logo"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_chapters" />
+        app:layout_constraintStart_toEndOf="@+id/image_view_manga_picture_item"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_chapters_amnt_item" />
 </android.support.constraint.ConstraintLayout>

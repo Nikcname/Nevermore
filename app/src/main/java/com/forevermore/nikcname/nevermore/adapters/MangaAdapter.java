@@ -2,6 +2,7 @@ package com.forevermore.nikcname.nevermore.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +33,10 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MangaViewHol
         public MangaViewHolder(@NonNull View itemView){
             super(itemView);
 
-            imageViewLogo = itemView.findViewById(R.id.image_view_logo);
-            textViewTitle = itemView.findViewById(R.id.text_view_title);
-            textViewChapters = itemView.findViewById(R.id.text_view_chapters);
-            textViewDesc = itemView.findViewById(R.id.text_view_desc);
+            imageViewLogo = itemView.findViewById(R.id.image_view_manga_picture_item);
+            textViewTitle = itemView.findViewById(R.id.text_view_manga_title_item);
+            textViewChapters = itemView.findViewById(R.id.text_view_chapters_amnt_item);
+            textViewDesc = itemView.findViewById(R.id.text_view_manga_desc_item);
 
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
