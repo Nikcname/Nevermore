@@ -10,6 +10,7 @@ import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import com.forevermore.nikcname.nevermore.downloaders.IntPageDownloader;
 import com.forevermore.nikcname.nevermore.fragments.EntryFragment;
 import com.forevermore.nikcname.nevermore.fragments.ListFragment;
+import com.forevermore.nikcname.nevermore.fragments.ReadingFragment;
 
 import java.util.List;
 
@@ -21,7 +22,6 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         ListFragment listFragment = new ListFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
         listFragment.setOnPassListener(new ListFragment.PassmangaSelected() {
             @Override
@@ -43,7 +43,7 @@ public class StartActivity extends AppCompatActivity {
                             }
                         });
 
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                         fragmentTransaction.setCustomAnimations(
                                 R.anim.enter_from_right,
@@ -61,13 +61,25 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.frame_layout_for_fragments, listFragment);
         fragmentTransaction.commit();
 
     }
 
     private void startReading(String link){
-        Log.e("sssss", link);
+        ReadingFragment readingFragment = ReadingFragment.newInstance(link);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.setCustomAnimations(
+                R.anim.enter_from_right,
+                R.anim.exit_to_left,
+                R.anim.enter_from_left,
+                R.anim.exit_to_right
+        );
+        fragmentTransaction.replace(R.id.frame_layout_for_fragments, readingFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 }
