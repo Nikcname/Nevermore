@@ -22,8 +22,8 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
 
-//    private String siteUrl = "https://manga-chan.me/manga/new";
-    private String siteMainUriForRecycler = "https://manga-chan.me/manga/new?offset=15480";
+    private String siteMainUriForRecycler = "https://manga-chan.me/manga/new";
+//    private String siteMainUriForRecycler = "https://manga-chan.me/manga/new?offset=15480";
     private RecyclerView recyclerViewForMangaList;
     private RecyclerView.Adapter adapterForMangaList;
     private RecyclerView.LayoutManager managerForMangaList;
@@ -65,7 +65,8 @@ public class ListFragment extends Fragment {
     }
 
     public void downloadImages(List<MangaInstance> mangas){
-        for (int i = 0; i < mangas.size(); i++){
+//        for (int i = 0; i < mangas.size(); i++){
+        for (int i = 0; i < 4; i++){
             ImageDownloader imageDownloader = new ImageDownloader(i);
             imageDownloader.setNotifyListener(new ImageDownloader.NotifyChange() {
                 @Override
@@ -73,9 +74,9 @@ public class ListFragment extends Fragment {
                     notifyAdapterChange(bitmap, i);
                 }
             });
-//            imageDownloader.execute(urls.get(i));
-            imageDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas.get(i)
-                    .getImageUrl());
+            imageDownloader.execute(mangas.get(i).getImageUrl());
+//            imageDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas.get(i)
+//                    .getImageUrl());
         }
     }
 
