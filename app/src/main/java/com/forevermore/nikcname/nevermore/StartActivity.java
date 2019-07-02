@@ -1,6 +1,5 @@
 package com.forevermore.nikcname.nevermore;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +9,7 @@ import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import com.forevermore.nikcname.nevermore.downloaders.IntPageDownloader;
 import com.forevermore.nikcname.nevermore.fragments.EntryFragment;
 import com.forevermore.nikcname.nevermore.fragments.ListFragment;
-import com.forevermore.nikcname.nevermore.fragments.ReadingFragment;
+import com.forevermore.nikcname.nevermore.fragments.ReadingViewFragment;
 
 import java.util.List;
 
@@ -38,8 +37,8 @@ public class StartActivity extends AppCompatActivity {
                         EntryFragment entryFragment = EntryFragment.newInstance(manga);
                         entryFragment.setOnCallbackListener(new EntryFragment.InterfacePassSelectedLink() {
                             @Override
-                            public void passLink(String link) {
-                                startReading(link);
+                            public void passLink(List<String> imageUris) {
+                                startReading(imageUris);
                             }
                         });
 
@@ -67,19 +66,30 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    private void startReading(String link){
-        ReadingFragment readingFragment = ReadingFragment.newInstance(link);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    private void startReading(List<String> imageUris){
+//        ReadingFragment readingFragment = ReadingFragment.newInstance(link);
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//
+//        fragmentTransaction.setCustomAnimations(
+//                R.anim.enter_from_right,
+//                R.anim.exit_to_left,
+//                R.anim.enter_from_left,
+//                R.anim.exit_to_right
+//        );
+//        fragmentTransaction.replace(R.id.frame_layout_for_fragments, readingFragment);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
 
+        ReadingViewFragment rvf = ReadingViewFragment.newInstance(imageUris);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(
                 R.anim.enter_from_right,
                 R.anim.exit_to_left,
                 R.anim.enter_from_left,
                 R.anim.exit_to_right
         );
-        fragmentTransaction.replace(R.id.frame_layout_for_fragments, readingFragment);
+        fragmentTransaction.replace(R.id.frame_layout_for_fragments, rvf);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
 }
