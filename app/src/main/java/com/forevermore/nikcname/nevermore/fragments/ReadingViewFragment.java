@@ -40,6 +40,7 @@ public class ReadingViewFragment extends Fragment {
         ViewPager vp = v.findViewById(R.id.view_pager_view);
 
         vp.setAdapter(new PagerAdapterReading(getFragmentManager(), listUri));
+        vp.setOffscreenPageLimit(10);
 
         return v;
     }
