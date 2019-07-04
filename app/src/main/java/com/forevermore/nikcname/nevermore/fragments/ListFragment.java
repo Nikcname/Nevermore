@@ -28,8 +28,7 @@ public class ListFragment extends Fragment {
     private RecyclerView.Adapter adapterForMangaList;
     private RecyclerView.LayoutManager managerForMangaList;
     private List<MangaInstance> mangaInstancesOfList = new ArrayList<>();
-    private List<MangaInstance> mangaInstancesTempList = new ArrayList<>();
-    private PassmangaSelected passmangaSelected;
+    private CallbackListFragment callbackListFragment;
 
     public ListFragment() {}
 
@@ -46,8 +45,12 @@ public class ListFragment extends Fragment {
         adapterForMangaList = new MangaAdapter(mangaInstancesOfList);
         recyclerViewForMangaList.setAdapter(adapterForMangaList);
 
-        ((MangaAdapter) adapterForMangaList).setOnClickMangaListener(mangaClicked ->
-                passmangaSelected.passSelected(mangaClicked));
+        ((MangaAdapter)adapterForMangaList).setOnClickMangaListener(new MangaAdapter.OnClickedManga() {
+            @Override
+            public void mangaClicked(MangaInstance mangaClicked) {
+                callbackListFragment.itemPressed(mangaClicked);
+            }
+        });
 
         return viewFragmentList;
     }
@@ -57,43 +60,22 @@ public class ListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         PageDownloader pageDownloader = new PageDownloader();
-        pageDownloader.setOnResultListener(mangas -> {
-            mangaInstancesTempList = mangas;
-            downloadImages(mangas);});
-
+        pageDownloader.setListener(new PageDownloader.CallbackPageDownloader() {
+            @Override
+            public void mangaInstance(MangaInstance mangaInstance) {
+                mangaInstancesOfList.add(mangaInstance);
+                adapterForMangaList.notifyDataSetChanged();
+            }
+        });
         pageDownloader.execute(siteMainUriForRecycler);
     }
 
-    public void downloadImages(List<MangaInstance> mangas){
-//        for (int i = 0; i < mangas.size(); i++){
-        for (int i = 0; i < 4; i++){
-            ImageDownloader imageDownloader = new ImageDownloader(i);
-            imageDownloader.setNotifyListener(new ImageDownloader.NotifyChange() {
-                @Override
-                public void notifyAdapter(Bitmap bitmap, int i) {
-                    notifyAdapterChange(bitmap, i);
-                }
-            });
-            imageDownloader.execute(mangas.get(i).getImageUrl());
-//            imageDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas.get(i)
-//                    .getImageUrl());
-        }
+    public interface CallbackListFragment{
+        void itemPressed(MangaInstance manga);
     }
 
-    public void notifyAdapterChange(Bitmap bitmap, int i){
-
-        MangaInstance temp = mangaInstancesTempList.get(i);
-        temp.setBitmap(bitmap);
-        mangaInstancesOfList.add(temp);
-        adapterForMangaList.notifyDataSetChanged();
-    }
-
-    public interface PassmangaSelected{
-        void passSelected(MangaInstance manga);
-    }
-
-    public void setOnPassListener(PassmangaSelected passmangaSelected){
-        this.passmangaSelected = passmangaSelected;
+    public void setListener(CallbackListFragment callbackListFragment){
+        this.callbackListFragment = callbackListFragment;
     }
 
 }

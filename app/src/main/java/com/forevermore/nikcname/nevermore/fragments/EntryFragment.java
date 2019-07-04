@@ -1,12 +1,10 @@
 package com.forevermore.nikcname.nevermore.fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +18,11 @@ import android.widget.TextView;
 import com.forevermore.nikcname.nevermore.R;
 import com.forevermore.nikcname.nevermore.adapters.ChapterAdapter;
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
-import com.forevermore.nikcname.nevermore.services.ImageLinkGenerator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EntryFragment extends Fragment {
 
@@ -38,13 +32,8 @@ public class EntryFragment extends Fragment {
     private RecyclerView.LayoutManager managerForChapters;
     private Button startReading;
     private View v;
-    private int flagDialogStop = 0;
-    private List<String> IMAGE_URLS = new ArrayList<>();
     private int UNIT_COUNT;
-    private List<String> imgLocation = new ArrayList<>();
     private WebView webViewOne;
-    private WebView webViewTwo;
-    private ProgressDialog dialog;
     private InterfacePassSelectedLink interfacePassSelectedLink;
     private String cssPathPages = "body div#wrap div#content div.chapter div.page.postload select.drop option";
 
@@ -77,7 +66,7 @@ public class EntryFragment extends Fragment {
         ImageView imageViewPicture = v.findViewById(R.id.image_view_picture_entry);
         textViewFullDesc.setMovementMethod(new ScrollingMovementMethod());
         textViewFullDesc.setText(mangaInstance.getFullDesc());
-        imageViewPicture.setImageBitmap(mangaInstance.getBitmap());
+        imageViewPicture.setImageBitmap(mangaInstance.getPreviewBitmap());
 
         return v;
     }
@@ -86,52 +75,22 @@ public class EntryFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        ((ChapterAdapter)adapterForChapters).setChapterClickListener(new ChapterAdapter.OnChapterSelected() {
+            @Override
+            public void passItemNum(int num) {
+
+                String linkOfMangaForRead = "https://manga-chan.me" + mangaInstance.getChapterUris().get(num);
+                downloadLinks(linkOfMangaForRead);
+            }
+        });
+
         startReading.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String linkOfMangaForRead = "https://manga-chan.me" + mangaInstance.getChapterOne();
+                downloadLinks(linkOfMangaForRead);
 
-                webViewOne = new WebView(getContext());
-                webViewOne.getSettings().setJavaScriptEnabled(true);
-                dialog = new ProgressDialog(getContext());
-                webViewOne.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        webViewOne.evaluateJavascript(
-                                "(function() { return document.documentElement.innerHTML; })();",
-                                new ValueCallback<String>() {
-                                    @Override
-                                    public void onReceiveValue(String html) {
-                                        parseJsoup(html);
-                                        webViewStopped();
-                                        webViewTwo.loadUrl(linkOfMangaForRead + "#page=2");
-                                    }
-                                });
-                    }
-                });
-                webViewOne.loadUrl(linkOfMangaForRead + "#page=1");
-
-                webViewTwo = new WebView(getContext());
-                webViewTwo.getSettings().setJavaScriptEnabled(true);
-                dialog = new ProgressDialog(getContext());
-                webViewTwo.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        webViewTwo.evaluateJavascript(
-                                "(function() { return document.documentElement.innerHTML; })();",
-                                new ValueCallback<String>() {
-                                    @Override
-                                    public void onReceiveValue(String html) {
-                                        parseJsoup(html);
-                                        webViewStopped();
-                                    }
-                                });
-                    }
-                });
-                dialog.setMessage("Loading..Please wait.");
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
             }
         });
     }
@@ -146,30 +105,43 @@ public class EntryFragment extends Fragment {
 
         Elements pages = data.select(cssPathPages);
 
-        UNIT_COUNT = (pages.size() -2)/2;
+        UNIT_COUNT = (pages.size() -2)/2 - 1;
 
-        String imageUrl = data.selectFirst("body div#wrap div#content div#image a img").attr("src");
+//        imageUrl = data.selectFirst("body div#wrap div#content div#image a img").attr("src");
 
-        IMAGE_URLS.add(imageUrl);
     }
 
-    private void webViewStopped(){
-        flagDialogStop++;
-        if (flagDialogStop == 2){
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            imgLocation = new ImageLinkGenerator(UNIT_COUNT, IMAGE_URLS).generateLinks();
-            interfacePassSelectedLink.passLink(imgLocation);
-        }
+    private void webViewStopped(String link){
+            interfacePassSelectedLink.passLink(UNIT_COUNT, link);
     }
 
     public interface InterfacePassSelectedLink{
-        void passLink(List<String> link);
+        void passLink(int units, String link);
     }
 
     public void setOnCallbackListener(InterfacePassSelectedLink interfacePassSelectedLink){
         this.interfacePassSelectedLink = interfacePassSelectedLink;
+    }
+
+    private void downloadLinks(String linkOfMangaForRead){
+        webViewOne = new WebView(getContext());
+        webViewOne.getSettings().setJavaScriptEnabled(true);
+        webViewOne.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+
+                webViewOne.evaluateJavascript(
+                        "(function() { return document.documentElement.innerHTML; })();",
+                        new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String html) {
+                                parseJsoup(html);
+                                webViewStopped(linkOfMangaForRead);
+                            }
+                        });
+            }
+        });
+        webViewOne.loadUrl(linkOfMangaForRead + "#page=1");
+
     }
 }

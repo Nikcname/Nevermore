@@ -7,70 +7,63 @@ import java.util.List;
 
 public class MangaInstance {
 
-    private String name;
-    private String description;
-    private String imageUrl;
-    private String chapters;
-    private Bitmap bitmap;
-    private String urlOfManga;
+    private String previewName;
+    private String previewDescription;
+    private String previewImageUrl;
+    private String previewAvailableChapters;
+    private Bitmap previewBitmap;
+    private String previewLink;
     private String fullDesc;
     private List<String> chapterDescs = new ArrayList<>();
     private List<String> chapterUris = new ArrayList<>();
     private String chapterOne;
 
-    public String getChapterOne() {
-        return chapterOne;
+    public String getPreviewName() {
+        return previewName;
     }
 
-    public void setChapterOne(String chapterOne) {
-        this.chapterOne = chapterOne;
+    public void setPreviewName(String previewName) {
+        this.previewName = previewName;
     }
 
-    public MangaInstance(String name, String description, String imageUrl, String chapters, String urlOfManga) {
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.chapters = chapters;
-        this.urlOfManga = urlOfManga;
+    public String getPreviewDescription() {
+        return previewDescription;
     }
 
-    @Override
-    public String toString() {
-        return "MangaInstance{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", chapters='" + chapters + '\'' +
-                ", bitmap=" + bitmap +
-                ", urlOfManga='" + urlOfManga + '\'' +
-                ", fullDesc='" + fullDesc + '\'' +
-                ", chapterDescs=" + chapterDescs +
-                ", chapterUris=" + chapterUris +
-                '}';
+    public void setPreviewDescription(String previewDescription) {
+        this.previewDescription = previewDescription;
     }
 
-    public String getUrlOfManga() {
-        return urlOfManga;
+    public String getPreviewImageUrl() {
+        return previewImageUrl;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public void setPreviewImageUrl(String previewImageUrl) {
+        this.previewImageUrl = previewImageUrl;
     }
 
-    public String getName() {
-        return name;
+    public String getPreviewAvailableChapters() {
+        return previewAvailableChapters;
     }
 
-    public String getDescription() {
-        return description;
+    public void setPreviewAvailableChapters(String previewAvailableChapters) {
+        this.previewAvailableChapters = previewAvailableChapters;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Bitmap getPreviewBitmap() {
+        return previewBitmap;
     }
 
-    public String getChapters() {
-        return chapters;
+    public void setPreviewBitmap(Bitmap previewBitmap) {
+        this.previewBitmap = previewBitmap;
+    }
+
+    public String getPreviewLink() {
+        return previewLink;
+    }
+
+    public void setPreviewLink(String previewLink) {
+        this.previewLink = previewLink;
     }
 
     public String getFullDesc() {
@@ -78,7 +71,7 @@ public class MangaInstance {
     }
 
     public void setFullDesc(String fullDesc) {
-        this.fullDesc = fullDesc.substring(0, fullDesc.length() - 17);
+        this.fullDesc = fullDesc;
     }
 
     public List<String> getChapterDescs() {
@@ -97,7 +90,11 @@ public class MangaInstance {
         this.chapterUris = chapterUris;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public String getChapterOne() {
+        return chapterOne;
+    }
+
+    public void setChapterOne(String chapterOne) {
+        this.chapterOne = chapterOne;
     }
 }

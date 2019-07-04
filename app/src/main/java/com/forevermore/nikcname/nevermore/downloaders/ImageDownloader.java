@@ -13,13 +13,7 @@ import java.util.List;
 
 public class ImageDownloader extends AsyncTask<String, Bitmap, Bitmap> {
 
-    private NotifyChange notifyChange;
-    private int i;
-
-    public ImageDownloader(int i){
-        this.i = i;
-    }
-    public ImageDownloader(){}
+    private CallbackImageDownloader callbackImageDownloader;
 
     @Override
     protected Bitmap doInBackground(String... strings) {
@@ -37,34 +31,19 @@ public class ImageDownloader extends AsyncTask<String, Bitmap, Bitmap> {
             e.printStackTrace();
         }
 
-        if (bitmap == null){
-            try {
-                URL url = new URL(strings[0].substring(0, strings[0].length() - 3) + "jpg");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                InputStream inputStream = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
         return bitmap;
     }
 
     @Override
-    protected void onPostExecute(Bitmap aVoid) {
-        super.onPostExecute(aVoid);
-
-        notifyChange.notifyAdapter(aVoid, i);
-
+    protected void onPostExecute(Bitmap bitmap) {
+        callbackImageDownloader.previewImageBitmap(bitmap);
     }
 
-    public interface NotifyChange{
-        void notifyAdapter(Bitmap bitmap, int i);
+    public interface CallbackImageDownloader{
+        void previewImageBitmap(Bitmap bitmap);
     }
 
-    public void setNotifyListener(NotifyChange notifyChange){
-        this.notifyChange = notifyChange;
+    public void setListener(CallbackImageDownloader callbackImageDownloader){
+        this.callbackImageDownloader = callbackImageDownloader;
     }
 }

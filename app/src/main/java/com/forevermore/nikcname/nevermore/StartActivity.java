@@ -3,13 +3,11 @@ package com.forevermore.nikcname.nevermore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import com.forevermore.nikcname.nevermore.downloaders.IntPageDownloader;
 import com.forevermore.nikcname.nevermore.fragments.EntryFragment;
 import com.forevermore.nikcname.nevermore.fragments.ListFragment;
-import com.forevermore.nikcname.nevermore.fragments.ReadingViewFragment;
 
 import java.util.List;
 
@@ -22,11 +20,11 @@ public class StartActivity extends AppCompatActivity {
 
         ListFragment listFragment = new ListFragment();
 
-        listFragment.setOnPassListener(new ListFragment.PassmangaSelected() {
+        listFragment.setListener(new ListFragment.CallbackListFragment() {
             @Override
-            public void passSelected(MangaInstance manga) {
-                IntPageDownloader pageDownloader = new IntPageDownloader();
-                pageDownloader.setOnDescDownloadedListener(new IntPageDownloader.PassListAndDesc() {
+            public void itemPressed(MangaInstance manga) {
+                IntPageDownloader intPageDownloader = new IntPageDownloader();
+                intPageDownloader.setOnDescDownloadedListener(new IntPageDownloader.PassListAndDesc() {
                     @Override
                     public void passLists(String descrAll, List<String> chapterDescs, List<String> chapterUris, String uriOfChapterOne) {
                         manga.setChapterDescs(chapterDescs);
@@ -37,8 +35,8 @@ public class StartActivity extends AppCompatActivity {
                         EntryFragment entryFragment = EntryFragment.newInstance(manga);
                         entryFragment.setOnCallbackListener(new EntryFragment.InterfacePassSelectedLink() {
                             @Override
-                            public void passLink(List<String> imageUris) {
-                                startReading(imageUris);
+                            public void passLink(int units, String link) {
+                                startReading(units, link);
                             }
                         });
 
@@ -56,7 +54,7 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction.commit();
                     }
                 });
-                pageDownloader.execute("https://manga-chan.me" + manga.getUrlOfManga());
+                intPageDownloader.execute("https://manga-chan.me" + manga.getPreviewLink());
             }
         });
 
@@ -66,7 +64,7 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    private void startReading(List<String> imageUris){
+    private void startReading(int units, String link){
 //        ReadingFragment readingFragment = ReadingFragment.newInstance(link);
 //        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 //
@@ -80,16 +78,18 @@ public class StartActivity extends AppCompatActivity {
 //        fragmentTransaction.addToBackStack(null);
 //        fragmentTransaction.commit();
 
-        ReadingViewFragment rvf = ReadingViewFragment.newInstance(imageUris);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(
-                R.anim.enter_from_right,
-                R.anim.exit_to_left,
-                R.anim.enter_from_left,
-                R.anim.exit_to_right
-        );
-        fragmentTransaction.replace(R.id.frame_layout_for_fragments, rvf);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        Log.d("sss", units + " " + link);
+//
+//        ReadingViewFragment rvf = ReadingViewFragment.newInstance(units, link);
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.setCustomAnimations(
+//                R.anim.enter_from_right,
+//                R.anim.exit_to_left,
+//                R.anim.enter_from_left,
+//                R.anim.exit_to_right
+//        );
+//        fragmentTransaction.replace(R.id.frame_layout_for_fragments, rvf);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
     }
 }

@@ -64,10 +64,10 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MangaViewHol
 
         MangaInstance manga = logoManga.get(i);
 
-        mangaViewHolder.imageViewLogo.setImageBitmap(manga.getBitmap());
-        mangaViewHolder.textViewDesc.setText(manga.getDescription());
-        mangaViewHolder.textViewChapters.setText(manga.getChapters());
-        mangaViewHolder.textViewTitle.setText(manga.getName());
+        mangaViewHolder.imageViewLogo.setImageBitmap(manga.getPreviewBitmap());
+        mangaViewHolder.textViewDesc.setText(manga.getPreviewDescription());
+        mangaViewHolder.textViewChapters.setText(manga.getPreviewAvailableChapters());
+        mangaViewHolder.textViewTitle.setText(manga.getPreviewName());
 
     }
 

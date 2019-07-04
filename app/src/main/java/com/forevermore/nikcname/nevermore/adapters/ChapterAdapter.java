@@ -14,6 +14,7 @@ import java.util.List;
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChViewHolder> {
 
     private List<String> mangaChapters;
+    private OnChapterSelected onChapterSelected;
 
     public ChapterAdapter(List<String> mangaChapters){
         this.mangaChapters = mangaChapters;
@@ -54,7 +55,15 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChViewHo
 
         @Override
         public void onClick(View view) {
-
+            onChapterSelected.passItemNum(getAdapterPosition());
         }
+    }
+
+    public interface OnChapterSelected{
+        void passItemNum(int num);
+    }
+
+    public void setChapterClickListener(OnChapterSelected onChapterSelected){
+        this.onChapterSelected = onChapterSelected;
     }
 }

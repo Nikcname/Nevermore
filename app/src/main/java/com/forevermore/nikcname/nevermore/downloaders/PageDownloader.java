@@ -1,28 +1,21 @@
 package com.forevermore.nikcname.nevermore.downloaders;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import com.forevermore.nikcname.nevermore.containers.MangaInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class PageDownloader extends AsyncTask<String, Void, Document> {
 
-    private String imgRegex = "(?i)<img[^>]+?src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
-    private String cssPath = "html body#wrap div.main_fon div#content div.content_row div.manga_images a img";
-    private String cssPathName = "html body#wrap div.main_fon div#content div.content_row div.manga_row1 div h2 a";
-    private String cssPathDesc = "html body#wrap div.main_fon div#content div.content_row div.tags";
-    private String cssChapters = "html body#wrap div.main_fon div#content div.content_row div.manga_row3 div.row3_left div.item2 span b";
-    private Pattern p = Pattern.compile(imgRegex);
-    private List<String> urls = new ArrayList<>();
-    private Matcher m;
-    private ResultList resultList;
+    private String cssPath = "html body#wrap div.main_fon div#content div.content_row div";
+    private String imageLink = ".manga_images a img";
+    private String mangaName = ".manga_row1 div h2 a";
+    private String mangaDescription = ".tags";
+    private String availableChapters = ".manga_row3 div.row3_left div.item2 span b";
+    private CallbackPageDownloader callbackPageDownloader;
 
     @Override
     protected Document doInBackground(String... strings) {
@@ -42,175 +35,47 @@ public class PageDownloader extends AsyncTask<String, Void, Document> {
 
         if (document != null) {
 
-            Elements images = document.select(cssPath);
-            Elements titles = document.select(cssPathName);
-            Elements headings = document.select(cssPathDesc);
-            Elements chapters = document.select(cssChapters);
+            Elements el_ImageLinks = document.select(cssPath + imageLink);
+            Elements el_MangaNames = document.select(cssPath + mangaName);
+            Elements el_MangaDescriptions = document.select(cssPath + mangaDescription);
+            Elements el_AvailableChapters = document.select(cssPath + availableChapters);
 
-            for (int i = 0; i < images.size(); i += 2) {
-                m = p.matcher(images.get(i).toString());
-                while (m.find()) {
-                    urls.add(m.group(1));
-                }
+            int count = el_MangaNames.size();
+
+            for (int i = 0; i < count; i++) {
+
+                String previewMangaLink = el_MangaNames.get(i).attr("href");
+                String previewMangaName = el_MangaNames.get(i).text();
+                String previewMangaDescription = el_MangaDescriptions.get(i).text();
+                String previewMangaAvailableChapters = el_AvailableChapters.get(i).text();
+                String previewImageLink = el_ImageLinks.get(i*2).attr("src");
+
+                ImageDownloader imageDownloader = new ImageDownloader();
+                imageDownloader.setListener(new ImageDownloader.CallbackImageDownloader() {
+                    @Override
+                    public void previewImageBitmap(Bitmap bitmap) {
+
+                        MangaInstance mangaInstance = new MangaInstance();
+                        mangaInstance.setPreviewName(previewMangaName);
+                        mangaInstance.setPreviewAvailableChapters(previewMangaAvailableChapters);
+                        mangaInstance.setPreviewBitmap(bitmap);
+                        mangaInstance.setPreviewImageUrl(previewImageLink);
+                        mangaInstance.setPreviewDescription(previewMangaDescription);
+                        mangaInstance.setPreviewLink(previewMangaLink);
+
+                        callbackPageDownloader.mangaInstance(mangaInstance);
+                    }
+                });
+                imageDownloader.execute(previewImageLink);
             }
-
-//            parseTagInfo(titles, names);
-//            parseTagInfo(headings, descs);
-//            parseTagInfo(chapters, chpts);
-//
-            List<MangaInstance> mangaInstances;
-
-            mangaInstances = parseTagInfo(titles, headings, chapters);
-//            for (int i = 0; i < count; i++) {
-//
-//                String titleRef = titles.get(i).toString();
-//
-//                StringBuilder stringBuilder = new StringBuilder();
-//
-//                boolean flagStart = false;
-//                for (int j = 0; j < titleRef.length(); j++) {
-//
-//                    if (titleRef.charAt(j) == '<') {
-//                        flagStart = false;
-//                    }
-//
-//                    if (flagStart) {
-//                        stringBuilder.append(titleRef.charAt(j));
-//                    }
-//
-//                    if (titleRef.charAt(j) == '>') {
-//                        flagStart = true;
-//                    }
-//                }
-//
-//                names.add(stringBuilder.toString());
-//            }
-
-//            for (int i = 0; i < count; i++) {
-//
-//                String headingRef = headings.get(i).toString();
-//
-//                StringBuilder stringBuilder = new StringBuilder();
-//
-//                boolean flagStart = false;
-//                for (int j = 0; j < headingRef.length(); j++) {
-//
-//                    if (headingRef.charAt(j) == '<') {
-//                        flagStart = false;
-//                    }
-//
-//                    if (flagStart) {
-//                        stringBuilder.append(headingRef.charAt(j));
-//                    }
-//
-//                    if (headingRef.charAt(j) == '>') {
-//                        flagStart = true;
-//                    }
-//                }
-//
-//                descs.add(stringBuilder.toString());
-//            }
-
-//            for (int i = 0; i < count; i++) {
-//
-//                String chaptersRef = chapters.get(i).toString();
-//
-//                StringBuilder stringBuilder = new StringBuilder();
-//
-//                boolean flagStart = false;
-//                for (int j = 0; j < chaptersRef.length(); j++) {
-//
-//                    if (chaptersRef.charAt(j) == '<') {
-//                        flagStart = false;
-//                    }
-//
-//                    if (flagStart) {
-//                        stringBuilder.append(chaptersRef.charAt(j));
-//                    }
-//
-//                    if (chaptersRef.charAt(j) == '>') {
-//                        flagStart = true;
-//                    }
-//                }
-//
-//                chpts.add(stringBuilder.toString());
-//            }
-//            for (int i = 0; i < count; i++) {
-//                mangaInstances.add(new MangaInstance(names.get(i), descs.get(i), urls.get(i), chpts.get(i)));
-//            }
-//            for (MangaInstance s : mangaInstances)
-//                System.out.println(s);
-            resultList.passMangaInstance(mangaInstances);
         }
     }
 
-    private List<MangaInstance> parseTagInfo(Elements titles,
-                              Elements headings,
-                              Elements chapters){
-
-        List<MangaInstance> mangaInstances = new ArrayList<>();
-        int count = titles.size();
-
-        for (int i = 0; i < count; i++) {
-
-            String urlOfManga = titles.get(i).attr("href");
-            String resultTitle = titles.get(i).text();
-            String resultHeading = headings.get(i).text();
-            String resultChapter = chapters.get(i).text();
-
-            mangaInstances.add(new MangaInstance(resultTitle, resultHeading, urls.get(i), resultChapter, urlOfManga));
-        }
-
-        return mangaInstances;
-    }
-//
-//    private String parseCharacters(String beforeParse){
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//
-//        boolean flagStart = false;
-//        for (int j = 0; j < beforeParse.length(); j++) {
-//
-//            char processing = beforeParse.charAt(j);
-//
-//            if (processing == '<') {
-//                flagStart = false;
-//            }
-//
-//            if (flagStart) {
-//                stringBuilder.append(beforeParse.charAt(j));
-//            }
-//
-//            if (processing == '>') {
-//                flagStart = true;
-//            }
-//        }
-//
-//        return stringBuilder.toString();
-//    }
-//
-//    private String patrseUrl(String string){
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//
-//        for (int i = 0; i < string.length(); i++){
-//            char temp = string.charAt(i);
-//            if (temp == '/'){
-//                while (temp != '"'){
-//                    stringBuilder.append(temp);
-//                    temp = string.charAt(++i);
-//                }
-//                break;
-//            }
-//        }
-//        return stringBuilder.toString();
-//    }
-
-    public interface ResultList{
-        void passMangaInstance(List<MangaInstance> urls);
+    public interface CallbackPageDownloader{
+        void mangaInstance(MangaInstance mangaInstance);
     }
 
-    public void setOnResultListener(ResultList resultList){
-        this.resultList = resultList;
+    public void setListener(CallbackPageDownloader callbackPageDownloader){
+        this.callbackPageDownloader = callbackPageDownloader;
     }
 }
